@@ -12,3 +12,5 @@ server/node_modules
 # Ignore keys and secrets
 *.pem
 *.json
+
+server/firebase-service-account.json
