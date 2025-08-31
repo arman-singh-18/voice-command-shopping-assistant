@@ -107,11 +107,21 @@ function App() {
     setListLoading(true);
     setListError("");
     try {
+      console.log("Fetching list from:", `${API_BASE}/api/list`);
       const res = await fetch(`${API_BASE}/api/list`);
-      if (!res.ok) throw new Error(`List fetch failed: ${res.status}`);
+      console.log("List response status:", res.status);
+      
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("List fetch error:", errorText);
+        throw new Error(`List fetch failed: ${res.status} - ${errorText}`);
+      }
+      
       const data = await res.json();
-      setItems(data);
+      console.log("List data received:", data);
+      setItems(Array.isArray(data) ? data : []);
     } catch (err) {
+      console.error("List fetch error:", err);
       setListError(err.message || "Failed to load list");
     } finally {
       setListLoading(false);
@@ -133,14 +143,29 @@ function App() {
   async function sendToAssistant(text) {
     try {
       setAssistantReply("...");
+      console.log("Sending to assistant:", text);
+      console.log("API endpoint:", `${API_BASE}/api/dialogflow/query`);
+      
       const res = await fetch(`${API_BASE}/api/dialogflow/query`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text, sessionId: sessionIdRef.current }),
       });
+      
+      console.log("Assistant response status:", res.status);
+      
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Assistant error:", errorText);
+        throw new Error(`Assistant request failed: ${res.status} - ${errorText}`);
+      }
+      
       const data = await res.json();
+      console.log("Assistant response:", data);
+      
       setAssistantReply(data.responseMessage || "");
       speak(data.responseMessage);
+      
       if (data.action === "search") {
         setSearchResults(Array.isArray(data.results) ? data.results : []);
         setSubstitutes(Array.isArray(data.substitutes) ? data.substitutes : []);
@@ -165,6 +190,7 @@ function App() {
         fetchList();
       }
     } catch (e) {
+      console.error("Assistant error:", e);
       setAssistantReply("Sorry, something went wrong talking to the assistant.");
     }
   }
