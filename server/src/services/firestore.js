@@ -1,17 +1,16 @@
+// server/src/firestore.js
 import admin from "firebase-admin";
 import dotenv from "dotenv";
-import { createRequire } from "module";
 
 dotenv.config();
-const require = createRequire(import.meta.url);
-
-// Load service account JSON directly
-const serviceAccount = require("../../firebase-service-account.json");
 
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    projectId: process.env.FIREBASE_PROJECT_ID,
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    }),
   });
 }
 
@@ -33,4 +32,3 @@ export const deleteItem = async (id) => {
   await shoppingListRef.doc(id).delete();
   return { success: true };
 };
-
