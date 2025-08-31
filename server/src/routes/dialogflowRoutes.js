@@ -6,6 +6,20 @@ import { searchCatalog, categorizeItem, getSubstitutes, getSeasonalItems, getLow
 
 const router = express.Router();
 
+// Add a simple GET endpoint for testing
+router.get("/query", (req, res) => {
+  res.json({ 
+    message: "Dialogflow endpoint is working! Use POST method with message and sessionId.",
+    example: {
+      method: "POST",
+      body: {
+        message: "add milk",
+        sessionId: "test-session"
+      }
+    }
+  });
+});
+
 // Super safe parameter getter
 function getParam(params, key) {
   if (!params || !params[key]) return null;
@@ -21,6 +35,8 @@ function getParam(params, key) {
 
 router.post("/query", async (req, res) => {
   try {
+    console.log("Dialogflow POST request received:", req.body);
+    
     const { message, sessionId } = req.body;
     if (!message) {
       return res.status(400).json({ error: "Message is required" });
@@ -226,7 +242,7 @@ router.post("/query", async (req, res) => {
     res.json({
       intent,
       responseMessage:
-        result.fulfillmentText || "Sorry, I didn’t understand that.",
+        result.fulfillmentText || "Sorry, I didn't understand that.",
       parameters: params,
     });
   } catch (error) {
