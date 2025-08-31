@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 
-const API_BASE = process.env.REACT_APP_API_BASE || "https://voice-command-shopping-assistant-2.onrender.com/";
+const API_BASE = process.env.REACT_APP_API_BASE || "https://voice-command-shopping-assistant-2.onrender.com";
 
 function App() {
   const [items, setItems] = useState([]);
