@@ -424,3 +424,142 @@ select:focus {
   outline-offset: 3px;
   box-shadow: 0 0 0 2px var(--accent-shadow);
 }
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+    max-width: 100%;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px 10px;
+  }
+  
+  .header h1 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  
+  .controls {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .controls select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .btn {
+    padding: 12px 20px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    min-height: 44px; /* Better touch target */
+  }
+  
+  .btn.start, .btn.stop {
+    width: 100%;
+    font-size: 18px;
+    padding: 15px;
+  }
+  
+  .panel {
+    margin-bottom: 15px;
+    padding: 15px;
+  }
+  
+  .list-item {
+    padding: 12px;
+    gap: 10px;
+  }
+  
+  .list-item button {
+    min-width: 60px;
+    min-height: 36px;
+  }
+  
+  input[type="text"] {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px;
+  }
+  
+  /* Better touch targets for mobile */
+  button {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  
+  /* Improve mobile scrolling */
+  .list {
+    max-height: 60vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Voice feedback overlay for mobile */
+@media (max-width: 768px) {
+  .voice-feedback {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    z-index: 1000;
+    font-size: 18px;
+  }
+}
+
+/* Dark mode mobile improvements */
+@media (max-width: 768px) {
+  .dark-mode .btn {
+    border: 1px solid #374151;
+  }
+  
+  .dark-mode input {
+    border: 1px solid #374151;
+  }
+}
+
+/* Light mode mobile improvements */
+@media (max-width: 768px) {
+  .light-mode .btn {
+    border: 1px solid #d1d5db;
+  }
+  
+  .light-mode input {
+    border: 1px solid #d1d5db;
+  }
+}
+
+/* Prevent text selection on buttons for better mobile UX */
+.btn {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Improve mobile form elements */
+@media (max-width: 768px) {
+  select, input, button {
+    -webkit-appearance: none;
+    border-radius: 8px;
+  }
+  
+  select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    padding-right: 32px;
+  }
+}

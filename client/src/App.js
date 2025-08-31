@@ -21,6 +21,12 @@ function App() {
   const [lastAction, setLastAction] = useState("");
   const [language, setLanguage] = useState("en-US");
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark'); // 'dark' or 'light'
+  const [browserSupport, setBrowserSupport] = useState({
+    speechRecognition: false,
+    speechSynthesis: false,
+    isMobile: false,
+    userAgent: ""
+  });
 
   // Effect to apply theme class to body and save preference
   useEffect(() => {
@@ -46,6 +52,26 @@ function App() {
       null
     );
   }, []);
+
+  // Check browser support on component mount
+  useEffect(() => {
+    const userAgent = navigator.userAgent;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+    
+    setBrowserSupport({
+      speechRecognition: !!SpeechRecognition,
+      speechSynthesis: 'speechSynthesis' in window,
+      isMobile,
+      userAgent
+    });
+
+    console.log("Browser Support Check:", {
+      speechRecognition: !!SpeechRecognition,
+      speechSynthesis: 'speechSynthesis' in window,
+      isMobile,
+      userAgent
+    });
+  }, [SpeechRecognition]);
 
   useEffect(() => {
     fetchList();
@@ -231,6 +257,17 @@ function App() {
     }
   }
 
+  // Get browser support message
+  const getBrowserSupportMessage = () => {
+    if (!browserSupport.speechRecognition) {
+      if (browserSupport.isMobile) {
+        return "Voice commands are not supported on this mobile browser. Try Chrome or Safari.";
+      }
+      return "Your browser doesn't support Speech Recognition.";
+    }
+    return null;
+  };
+
   return (
     <div className="container">
       <header className="header">
@@ -247,11 +284,11 @@ function App() {
             {theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
           </button>
 
-          {!SpeechRecognition && (
-            <span className="warning">Your browser doesn't support Speech Recognition.</span>
+          {getBrowserSupportMessage() && (
+            <span className="warning">{getBrowserSupportMessage()}</span>
           )}
 
-          {SpeechRecognition && (
+          {browserSupport.speechRecognition && (
             <button className={listening ? "btn stop" : "btn start"} onClick={listening ? stopListening : startListening}>
               {listening ? "Stop" : "Speak"}
             </button>
@@ -266,6 +303,11 @@ function App() {
         </h2>
         <div className="bubble">{lastHeard || "–"}</div>
         <div className="muted" style={{ marginTop: 6, fontSize: 12 }}>Status: {recStatus}</div>
+        {browserSupport.isMobile && (
+          <div className="info" style={{ marginTop: 8, fontSize: 12 }}>
+            📱 Mobile: Make sure to allow microphone permissions when prompted
+          </div>
+        )}
       </section>
 
       <section className="panel">
