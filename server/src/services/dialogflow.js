@@ -1,20 +1,20 @@
 // server/src/services/dialogflow.js
 import dialogflow from "@google-cloud/dialogflow";
 import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
 
 dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const projectId = process.env.DIALOGFLOW_PROJECT_ID; // e.g. "voice-command-470407"
 const languageCode = process.env.DEFAULT_LANGUAGE_CODE || "en-US";
 
 // Create a Dialogflow session client
+// Use environment variables for credentials instead of JSON file
 const sessionClient = new dialogflow.SessionsClient({
-  keyFilename: path.join(__dirname, "../../firebase-service-account.json"), // Use absolute path
+  credentials: {
+    client_email: process.env.FIREBASE_CLIENT_EMAIL,
+    private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+  },
+  projectId: process.env.FIREBASE_PROJECT_ID,
 });
 
 /**

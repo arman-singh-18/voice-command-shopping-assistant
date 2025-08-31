@@ -9,7 +9,7 @@
 
 ### 2. Voice Commands Not Working
 - **Problem**: Dialogflow service account path was relative and could fail in production
-- **Solution**: Updated to use absolute path and added error handling
+- **Solution**: Updated to use environment variables instead of JSON file for better security
 - **Files Updated**: `server/src/services/dialogflow.js`
 
 ### 3. Better Error Handling
@@ -65,8 +65,7 @@ CLIENT_ORIGIN=*
 ### 3. Environment Variables
 Add all the environment variables listed above to your server service in Render.
 
-### 4. Firebase Service Account
-Make sure your `firebase-service-account.json` file is in the `server/` directory and accessible.
+**Important**: The `firebase-service-account.json` file is NOT needed in production. All credentials are now handled through environment variables for better security.
 
 ## Testing After Deployment
 
@@ -128,3 +127,9 @@ Example:
 ```
 CLIENT_ORIGIN=https://voice-command-shopping-assistant-client.onrender.com
 ```
+
+## Security Note
+
+- The `firebase-service-account.json` file should NOT be committed to GitHub
+- All credentials are now handled through environment variables
+- This is more secure and follows best practices for deployment
